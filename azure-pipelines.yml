@@ -1,23 +1,26 @@
 pool:
  vmImage: 'windows-2019'
 
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'build'
+steps:
+- task: DotNetCoreInstaller@0
+ inputs:
+ version: '2.2.0'
+
+variables:
+ buildConfiguration: 'Release'
+
+steps:
+- script: dotnet restore
+
+- script: dotnet build --configuration $(buildConfiguration)
+ displayName: 'dotnet build $(buildConfiguration)'
 
 - task: DotNetCoreCLI@2
-  inputs:
-    command: 'restore'
-    feedsToUse: 'select'
-
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'publish'
-    publishWebProjects: true
-    zipAfterPublish: false
+ inputs:
+ command: publish
+ publishWebProjects: True
+ arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+ zipAfterPublish: True 
 
 - task: PublishBuildArtifacts@1
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'drop'
-    publishLocation: 'Container'
+ displayName: 'publish artifacts'
