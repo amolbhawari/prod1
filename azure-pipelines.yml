@@ -1,13 +1,13 @@
+trigger:
+- master
+
+
 pool:
  vmImage: 'windows-2019'
 
-steps:
-- task: DotNetCoreInstaller@0
-
- version: '2.2.0'
-
 variables:
  buildConfiguration: 'Release'
+
 
 steps:
 - script: dotnet restore
